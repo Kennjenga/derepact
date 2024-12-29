@@ -27,10 +27,10 @@ export default function LoginForm() {
 
   // Redirect to /dashboard if login is successful
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success && state.user) {
       router.push("/dashboard"); // Redirect to the dashboard
     }
-  }, [state?.success, router]);
+  }, [state?.success, router, state?.user]);
 
   return (
     <form action={action} className="space-y-4 max-w-md mx-auto p-4">
