@@ -66,6 +66,7 @@ export async function signup(
         email,
         password: hashedPassword,
         verificationToken,
+        updatedAt: new Date().toISOString(),
       },
     });
 

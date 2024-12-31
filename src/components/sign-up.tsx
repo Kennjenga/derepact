@@ -3,10 +3,16 @@
 import { signup } from "@/actions/auth";
 import { useActionState } from "react";
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"; // Import Heroicons
+import { FormState } from "@/lib/sign/definitions";
 
 export default function SignupForm() {
-  const [state, action, pending] = useActionState(signup, undefined);
+  const router = useRouter(); // Initialize the router
+  const [state, action, pending] = useActionState<FormState, FormData>(
+    signup,
+    {}
+  ); // Pass the type here
 
   // State to manage form inputs
   const [formValues, setFormValues] = useState({
@@ -26,8 +32,22 @@ export default function SignupForm() {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle successful signup
+  const handleSuccess = () => {
+    // Redirect to a page where the user can choose their next step
+    router.push("/registeras"); // Replace with the actual route for role selection
+  };
+
   return (
-    <form action={action} className="space-y-4 max-w-md mx-auto p-4">
+    <form
+      action={async (formData) => {
+        await action(formData); // Perform the signup action
+        if (state?.success) {
+          handleSuccess(); // Redirect on success
+        }
+      }}
+      className="space-y-4 max-w-md mx-auto p-4"
+    >
       {/* Name Field */}
       <div className="space-y-2">
         <label htmlFor="name" className="block text-sm font-medium">
